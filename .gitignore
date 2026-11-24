@@ -1,0 +1,4 @@
+/vendor/
+/config.php
+/water_go_config.php
+*.log

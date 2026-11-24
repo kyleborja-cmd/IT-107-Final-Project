@@ -1,0 +1,121 @@
+WATER GO | IT 107 HANDOUT MATERIALS
+
+APPENDIX A: SYSTEM PROPOSAL DRAFT
+
+System name: Water Go
+Users: Water-service staff and administrators.
+Data: Staff account/contact records and assigned water-service orders.
+Why protect it: Accounts restrict access to staff details, assigned customer
+orders and the read-only security monitoring dashboard.
+Sensitive field selected for encryption: Emergency Contact Number.
+
+Field                   Kind              Required    Rule
+Emergency Contact       Formatted phone   Yes         11 digits starting 09
+
+Exact messages:
+  Contact number must be 11 digits and start with 09.
+
+Instructor decision: [ ] Approved  [ ] Revise and resubmit
+Instructor signature and date: ____________________________________
+Checkpoint 1 date: __________    Test email delivery recorded: __________
+
+
+DESIGN DECISIONS
+
+Password hashing. New passwords use Argon2id at PHP's defaults. This adds a
+memory cost to guesses and preserves the full byte length of a Unicode password.
+password_verify also supports hashes created by the earlier application.
+
+Password strength. Weak is under eight characters or fewer than two of
+lowercase, uppercase, digits and other characters. Strong has at least 12
+characters and three classes. Other acceptable passwords are Medium. The rule
+rejects single-class short choices while allowing an 8-character mixed password.
+
+Security answers. Answers are case-normalized and individually salted and
+hashed. Recovery compares the supplied answer with the selected hash. This
+reduces exposure of answers if a database is disclosed. Unrecognized identifiers
+show deterministic decoy questions and the same rejection text. Showing an
+account's real selection before authentication can disclose its question set
+to someone who already knows that selection. That is a limitation of this flow.
+
+CAPTCHA failures. CAPTCHA failures are logged separately from credential
+failures. That lets the dashboard show bot-check failures without allowing a
+failed CAPTCHA alone to lock an account.
+
+Sessions and browser history. Server-side authorization, session-ID rotation,
+idle expiry, private/no-store responses and logout protect access. Back/forward
+cache restoration also triggers a fresh request on protected pages.
+
+Change Password access. The verified reset OTP is consumed under a database
+row lock. The server then issues a short-lived session grant bound to the user
+and the current password hash. The grant is checked again within the password
+update transaction. On success the grant is removed and the history and log
+are written atomically.
+
+Hashing and encryption. Hashing supports comparison of passwords, security
+answers and OTPs. AES-256-GCM uses a random IV and authenticates ciphertext for
+the emergency contact, which staff can see from their own dashboard. The
+encryption key lives in the external config.
+
+Append-only log. The app issues only SELECT and INSERT against security_events.
+A restricted deployment account should have only those privileges on that
+table. Apply grants table by table or any schema-wide DELETE privilege will
+also apply to the log. Schema migrations should use a separate operator account.
+
+Automatic monitoring. A Windows Task Scheduler task can run the PHP CLI every
+15 minutes. The SQL uniqueness constraint prevents duplicates even if runs
+overlap. The classroom demo can trigger the same command manually.
+
+Direct file access. Apache blocks internal PHP folders and disables directory
+listings. Public CSS and JS are served as assets. A browser script request and a
+direct visit both need access to the same public JS bytes, so all secrets and
+authorization checks stay on the server.
+
+
+PRIVACY NOTE
+
+Birthdate reveals age, which section 3(l) of RA 10173 lists as sensitive
+personal information. It is required to verify the minimum age. The
+registration ID is a Water Go account identifier. If it is sourced instead
+from an ID issued by a government agency, review its classification before
+collecting it. Name, address, email, emergency contact,
+account role and identifiers are personal information when
+connected to a person. Name and ID identify the staff record. Address and
+emergency contact support staff contact. Email is used to verify ownership and
+deliver security notices.
+Authentication hashes and prompts protect account access. Consent timestamps
+document permission. IP, browser and security logs support detection and
+investigation of abnormal access. The public notice describes access, contact
+and retention. The organization should confirm its actual retention process.
+
+Source: https://privacy.gov.ph/data-privacy-act/
+
+
+APPENDIX B: THREAT MODEL AND DEMO CHECKS
+
+Threat / weakness                        Control / CIA / check
+SQL parameters treated as code           Prepared statements / C,I / audit queries
+Attacker text interpreted as markup      Escaping and textContent / C,I / inspect event rendering
+Unauthenticated cross-origin form        CSRF tokens / I / omit token on valid form
+Account identified by different feedback Generic messages and decoy questions / C / compare responses
+Repeated guesses across accounts         Durable IP expiry / C,A / verify threshold across accounts
+Stolen or stale session                  HttpOnly, SameSite, timeout, rotation / C,I / sign out, then Back
+Reuse of a recently compromised secret   Three-password check / C / try current and prior passwords
+Automated form submission                Hidden registration honeypot / A / submit a filled trap
+No audit trail for security failures     Append-only event log / I / compare action with dashboard row
+Internal errors disclosed                Errors logged outside web root / C / inspect a failed request
+Credentials exposed via project files    External private config / C / inspect repository and HTTP routes
+Framing or MIME sniffing                 DENY and nosniff headers / C,I / inspect header values
+Plaintext emergency contacts in storage AES-256-GCM / C / check encrypted DB value and owner display
+
+
+APPENDIX C: DEVELOPMENT JOURNAL TEMPLATE
+
+Week and dates: ___________________
+What I built: ________________________________________________________
+Where I got stuck: ___________________________________________________
+How I solved it: _____________________________________________________
+What I learned about security: _______________________________________
+Actual commit count this week: ______   Checkpoint evidence: __________
+
+Repeat for each real development week.

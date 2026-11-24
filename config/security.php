@@ -1,0 +1,27 @@
+<?php
+return [
+    'username_min_length' => 6,
+    'username_max_length' => 20,
+    'password_min_length' => 8,
+    'password_max_length' => 64,
+    'name_max_length' => 50,
+    'lockout_attempts' => 3,
+    'lockout_tiers_seconds' => [15, 30, 60],
+    'otp_expiry_seconds' => 300,
+    'otp_max_attempts' => 3,
+    'idle_session_timeout_seconds' => 60,
+    'login_attempt_retention_seconds' => 600,
+    'ip_block_threshold' => 10,
+    'ip_block_window_seconds' => 600,
+    'ip_block_duration_seconds' => 60,
+    'security_questions' => [
+        'Q1' => 'What was the name of your first pet?',
+        'Q2' => 'Who was your best friend in elementary school?',
+        'Q3' => 'Who was your favorite teacher in high school?',
+        'Q4' => 'What is your mother’s maiden first name?',
+        'Q5' => 'What street did you live on in Grade 1?',
+        'Q6' => 'What was the first song you learned by heart?',
+        'Q7' => 'What was the name of your elementary school?',
+        'Q8' => 'What dish did you cook for the first time?',
+    ],
+];

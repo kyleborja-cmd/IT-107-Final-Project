@@ -1,0 +1,126 @@
+.water-home {
+  --home-neon: #72eaff;
+  isolation: isolate;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  overflow: clip;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  color: #edfaff;
+  background: #041a31;
+}
+.water-home .brand, .water-home .menu-toggle { color: #ecfaff; }
+.water-home .brand-light { color: var(--home-neon); }
+.water-home .brand-mark { box-shadow: 0 0 18px #27dfff70; }
+.water-home .main-nav { color: #d4eaf7; }
+.water-home .main-nav a:hover, .water-home .main-nav a.active { color: #92e9ff; }
+.water-home .main-nav a.active { text-shadow: 0 0 12px #36dfff80; }
+.water-home .home-main { display: grid; min-height: 0; }
+.water-scene {
+  isolation: isolate;
+  display: grid;
+  align-items: end;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(16px, 7svh, 80px) clamp(20px, 9vw, 140px);
+  min-height: 0;
+}
+.water-scene::before, .water-scene-bubbles { position: absolute; inset: 0; pointer-events: none; }
+.water-home::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: #0875a5 url('../images/water-surface.jpg') 56% center / cover no-repeat;
+  transform: scale(1.035);
+  animation: water-scene-drift 16s ease-in-out infinite alternate;
+}
+.water-scene::before {
+  content: '';
+  z-index: -1;
+  background: linear-gradient(0deg, #03182df5, #05274761 48%, transparent 78%),
+              linear-gradient(90deg, #03192ead, transparent 72%);
+}
+.water-scene-bubbles { z-index: -2; overflow: hidden; }
+.water-scene-bubbles span {
+  position: absolute;
+  bottom: -24px;
+  left: var(--x);
+  width: var(--size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid #c3f6ffd1;
+  background: radial-gradient(circle at 30% 25%, #f0fdffb3, transparent 40%);
+  box-shadow: inset -3px -3px 6px #8fe6fa73, 0 0 8px #a1e6ff50;
+  animation: water-scene-bubble var(--duration) linear var(--delay) infinite;
+}
+.water-scene-bubbles span:nth-child(1) { --x: 16%; --size: 8px; --duration: 13s; --delay: -8s; }
+.water-scene-bubbles span:nth-child(2) { --x: 39%; --size: 13px; --duration: 17s; --delay: -12s; }
+.water-scene-bubbles span:nth-child(3) { --x: 59%; --size: 7px; --duration: 12s; --delay: -2s; }
+.water-scene-bubbles span:nth-child(4) { --x: 72%; --size: 19px; --duration: 16s; --delay: -6s; }
+.water-scene-bubbles span:nth-child(5) { --x: 85%; --size: 11px; --duration: 14s; --delay: -11s; }
+.water-scene-bubbles span:nth-child(6) { --x: 93%; --size: 6px; --duration: 10s; --delay: -4s; }
+.water-scene-copy { max-width: 650px; }
+.water-scene-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: clamp(10px, 2.6svh, 24px); }
+.water-options-trigger, .water-scene-dashboard { gap: 9px; padding: 10px 15px; border: 1px solid #a8eaff83; }
+.water-options-trigger {
+  background: linear-gradient(120deg, var(--home-neon), #91fadc);
+  color: #0a2941;
+  box-shadow: 0 0 18px #2adeff55;
+}
+.water-options-trigger:hover { background: #bdf6ff; box-shadow: 0 0 22px #2adeff8c; }
+.water-scene-dashboard { background: #0b365c9c; color: #f1fcff; box-shadow: 0 0 13px #2adeff2b; }
+.water-scene-dashboard:hover { background: #18547b; border-color: var(--home-neon); }
+.water-home :focus-visible { outline: 2px solid #b3edfb; outline-offset: 3px; }
+.water-scene h1 {
+  margin: 0 0 12px;
+  font: 800 clamp(2.5rem, min(9vw, 11svh), 5.8rem)/.96 'Manrope', sans-serif;
+  letter-spacing: -.06em;
+  color: #f5fcff;
+  text-shadow: 0 2px 16px #022241b3;
+}
+.water-scene h1 span { color: var(--home-neon); text-shadow: 0 0 22px #29d8ff73, 0 2px 16px #022241b3; }
+.water-scene p { margin: 0; max-width: 38ch; line-height: 1.55; color: #e2f2fb; }
+.water-theme.water-home .copyright-footer { background: #061d35a8; color: #bfd9e9; padding: 6px 5%; }
+.water-options-dialog {
+  max-height: calc(100svh - 24px);
+  width: min(460px, calc(100% - 28px));
+  padding: clamp(14px, 4vw, 26px);
+  border: 1px solid #5acde8;
+  border-radius: 14px;
+  background: #0c2540;
+  color: #f1fcff;
+  box-shadow: 0 0 23px #2adeff38, 0 20px 56px #0312259c;
+}
+.water-options-dialog::backdrop { background: #020e1cbd; }
+.water-options-heading h2 { margin: 0 0 5px; }
+.water-options-heading p, .water-options-list dd { margin: 0; color: #bfdae9; }
+.water-options-list { margin: 12px 0 16px; }
+.water-options-list div { border-top: 1px solid #325873; padding: 7px 0; }
+.water-options-list dt { font-weight: 700; }
+.water-options-list dd { margin-top: 2px; font-size: .85rem; }
+@keyframes water-scene-drift {
+  from { transform: scale(1.035) translate(-.25%, .4%); }
+  to { transform: scale(1.075) translate(.65%, -.55%); }
+}
+@keyframes water-scene-bubble {
+  0% { opacity: 0; transform: translate(0, 0); }
+  14%, 78% { opacity: .75; }
+  100% { opacity: 0; transform: translate(23px, -85svh); }
+}
+@media (max-width: 760px) {
+  .water-home .main-nav { top: 100%; background: #0a2946; }
+  .water-scene { padding-inline: 7%; }
+  .water-home::before { background-position: 61% center; }
+}
+@media (max-height: 420px) {
+  .water-scene { padding-block: 12px; }
+  .water-scene h1 { font-size: clamp(1.7rem, 11svh, 2.7rem); margin-bottom: 6px; }
+  .water-scene p { font-size: .85rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .water-home::before { animation: none; transform: none; }
+  .water-scene-bubbles { display: none; }
+}

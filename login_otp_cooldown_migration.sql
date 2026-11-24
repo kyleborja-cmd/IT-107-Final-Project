@@ -1,0 +1,1 @@
+ALTER TABLE auth_login_otps ADD COLUMN IF NOT EXISTS verified_at DATETIME NULL;
